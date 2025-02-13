@@ -12,17 +12,21 @@ const ProductTableRow = ({ product, onEdit }: Props) => (
   <TableRow>
     <TableCell>
       <div className="flex gap-3">
-        <img
-          src={product.photo}
-          alt={product.name}
-          className="h-12 w-12 rounded-lg object-cover flex-shrink-0"
-        />
+        {product.photo ? (
+          <img
+            src={product.photo}
+            alt={product.name}
+            className="h-14 w-14 rounded-lg object-cover flex-shrink-0"
+          />
+        ) : (
+          <div className="h-20 w-20 rounded-lg bg-muted-foreground flex-shrink-0" />
+        )}
         <div className="flex flex-col min-w-0">
           <span className="font-medium truncate">{product.name}</span>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span className="truncate">{product.brand.name}</span>
+            <span className="truncate">{product.brand?.name}</span>
             <span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
-            <span className="truncate">{product.category.name}</span>
+            <span className="truncate">{product.category?.name}</span>
           </div>
         </div>
       </div>

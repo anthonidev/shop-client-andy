@@ -5,7 +5,6 @@ import { getToken } from "next-auth/jwt";
 export default withAuth(
   async function middleware(req) {
     const token = await getToken({ req, secret: process.env.JWT_SECRET });
-    console.log("Token", token);
     const isAuth = !!token;
     const isAuthPage = req.nextUrl.pathname === "/login";
 

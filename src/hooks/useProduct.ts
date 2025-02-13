@@ -17,10 +17,10 @@ export interface Product {
   id: number;
   name: string;
   price: string;
-  photo: string;
+  photo?: string;
   isActive: boolean;
-  category: Category;
-  brand: Brand;
+  category?: Category;
+  brand?: Brand;
 }
 
 interface ProductsResponse {

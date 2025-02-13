@@ -1,17 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { createEntity } from "@/server/product-action";
+import { useToast } from "@/hooks/use-toast";
 
 interface EntityModalProps {
   open: boolean;
@@ -27,19 +29,31 @@ export function EntityModal({
   onSuccess,
 }: EntityModalProps) {
   const [loading, setLoading] = useState(false);
-
+  const { toast } = useToast();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      // Aquí irá la lógica para crear la categoría o marca
-      onSuccess?.();
-      onOpenChange(false);
-    } catch (error) {
-      console.error(`Error creating ${type}:`, error);
-    } finally {
-      setLoading(false);
-    }
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name") as string;
+    await createEntity(name, type)
+      .then(() => {
+        onSuccess?.();
+        onOpenChange(false);
+        toast({
+          title: "Entidad creada",
+          description: `La ${type} se ha creado correctamente`,
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Error",
+          description: err.message,
+          variant: "destructive",
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const title = type === "category" ? "Nueva Categoría" : "Nueva Marca";
@@ -63,7 +77,7 @@ export function EntityModal({
                 id="name"
                 name="name"
                 placeholder={`Ej: ${
-                  type === "category" ? "Calzado deportivo" : "Nike"
+                  type === "category" ? "Gaseosas" : "Coca cola"
                 }`}
                 required
               />

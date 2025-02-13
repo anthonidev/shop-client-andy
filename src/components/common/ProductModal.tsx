@@ -18,11 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Product } from "@/hooks/useProduct";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EntityModal } from "./EntityModal";
 import { ImageUpload } from "./ImageUpload";
+import { createProduct, updateProduct } from "@/server/product-action";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductModalProps {
   open: boolean;
@@ -56,44 +59,76 @@ export function ProductModal({
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isActive, setIsActive] = useState(true);
+  const { toast } = useToast();
 
   // Resetear estado cuando se abre/cierra el modal
   useEffect(() => {
     if (!open) {
       setImageFile(null);
       setImagePreview(null);
-    } else if (product?.photo) {
-      setImagePreview(product.photo);
+      setIsActive(true);
+    } else {
+      if (product?.photo) {
+        setImagePreview(product.photo);
+      }
+      if (product) {
+        setIsActive(product.isActive);
+      }
     }
   }, [open, product]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    const formData = new FormData(e.currentTarget);
+    if (imageFile) {
+      formData.append("photo", imageFile);
+    }
 
-    try {
-      const formData = new FormData(e.currentTarget);
-
-      // Si hay una imagen nueva, añadirla al FormData
-      if (imageFile) {
-        formData.append("photo", imageFile);
-      }
-
-      if (product) {
-        // Lógica de edición
-        formData.append("id", product.id.toString());
-        // await updateProduct(formData);
-      } else {
-        // Lógica de creación
-        // await createProduct(formData);
-      }
-
-      onSuccess?.();
-      onOpenChange(false);
-    } catch (error) {
-      console.error("Error saving product:", error);
-    } finally {
-      setLoading(false);
+    if (product) {
+      console.log("isActive", isActive);
+      formData.append("isActive", isActive.toString());
+      console.log("formData", formData.get("isActive"));
+      await updateProduct(formData, product.id)
+        .then(() => {
+          onSuccess?.();
+          onOpenChange(false);
+          toast({
+            title: "Producto actualizado",
+            description: "El producto se ha actualizado correctamente",
+          });
+        })
+        .catch((err) => {
+          toast({
+            title: "Error",
+            description: err.message,
+            variant: "destructive",
+          });
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      await createProduct(formData)
+        .then(() => {
+          onSuccess?.();
+          onOpenChange(false);
+          toast({
+            title: "Producto creado",
+            description: "El producto se ha creado correctamente",
+          });
+        })
+        .catch((err) => {
+          toast({
+            title: "Error",
+            description: err.message,
+            variant: "destructive",
+          });
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
@@ -145,8 +180,7 @@ export function ProductModal({
                 <div className="flex gap-2">
                   <Select
                     name="categoryId"
-                    defaultValue={product?.category.id.toString()}
-                    required
+                    defaultValue={product?.category?.id.toString()}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona" />
@@ -177,8 +211,7 @@ export function ProductModal({
                 <div className="flex gap-2">
                   <Select
                     name="brandId"
-                    defaultValue={product?.brand.id.toString()}
-                    required
+                    defaultValue={product?.brand?.id.toString()}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona" />
@@ -203,6 +236,20 @@ export function ProductModal({
               </div>
             </div>
             <ImageUpload onChange={setImageFile} defaultImage={imagePreview} />
+
+            {/* Campo de activación/desactivación solo para edición */}
+            {product && (
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="isActive"
+                  checked={isActive}
+                  onCheckedChange={setIsActive}
+                />
+                <Label htmlFor="isActive">
+                  {isActive ? "Producto activo" : "Producto inactivo"}
+                </Label>
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button
@@ -227,19 +274,33 @@ export function ProductModal({
           </DialogFooter>
         </form>
 
-        <EntityModal
-          type="category"
-          open={isCategoryModalOpen}
-          onOpenChange={setIsCategoryModalOpen}
-          onSuccess={onCategoryCreated}
-        />
+        {isCategoryModalOpen && (
+          <EntityModal
+            type="category"
+            open={isCategoryModalOpen}
+            onOpenChange={setIsCategoryModalOpen}
+            onSuccess={() => {
+              onCategoryCreated();
+              setIsCategoryModalOpen(false);
+              // Reabrimos el modal principal
+              onOpenChange(true);
+            }}
+          />
+        )}
 
-        <EntityModal
-          type="brand"
-          open={isBrandModalOpen}
-          onOpenChange={setIsBrandModalOpen}
-          onSuccess={onBrandCreated}
-        />
+        {isBrandModalOpen && (
+          <EntityModal
+            type="brand"
+            open={isBrandModalOpen}
+            onOpenChange={setIsBrandModalOpen}
+            onSuccess={() => {
+              onBrandCreated();
+              setIsBrandModalOpen(false);
+              // Reabrimos el modal principal
+              onOpenChange(true);
+            }}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

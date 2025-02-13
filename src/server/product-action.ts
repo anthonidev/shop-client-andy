@@ -55,12 +55,10 @@ export async function getProducts(
 
     return response.json();
   } catch (error) {
-    console.error("Error fetching products:", error);
     throw error;
   }
 }
 
-// Acción para obtener categorías
 export async function getCategories() {
   try {
     const response = await fetch(
@@ -83,7 +81,6 @@ export async function getCategories() {
   }
 }
 
-// Acción para obtener marcas
 export async function getBrands() {
   try {
     const response = await fetch(`${process.env.API_BACKENDL_URL}/api/brands`, {
@@ -99,6 +96,85 @@ export async function getBrands() {
     return response.json();
   } catch (error) {
     console.error("Error fetching brands:", error);
+    throw error;
+  }
+}
+export async function createProduct(formData: FormData) {
+  try {
+    const response = await fetch(
+      `${process.env.API_BACKENDL_URL}/api/products`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      const res = await response.json();
+      if (res.message) {
+        throw new Error(res.message);
+      }
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function createEntity(
+  name: string,
+
+  type: "category" | "brand"
+) {
+  try {
+    const type_plural = type === "category" ? "categories" : "brands";
+    const response = await fetch(
+      `${process.env.API_BACKENDL_URL}/api/${type_plural}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      }
+    );
+
+    if (!response.ok) {
+      const res = await response.json();
+      if (res.message) {
+        throw new Error(res.message);
+      }
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function updateProduct(formData: FormData, id: number) {
+  try {
+    const response = await fetch(
+      `${process.env.API_BACKENDL_URL}/api/products/${id}`,
+      {
+        method: "PUT",
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      const res = await response.json();
+      if (res.message) {
+        throw new Error(res.message);
+      }
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
     throw error;
   }
 }

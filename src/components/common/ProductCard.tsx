@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Product } from "@/hooks/useProduct";
+import Image from "next/image";
 
 interface ProductCardProps {
   product: Product;
@@ -17,9 +18,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <CardContent className="p-4">
         <div className="flex gap-4">
           {product.photo ? (
-            <img
+            <Image
               src={product.photo}
               alt={product.name}
+              width={80}
+              height={80}
               className="h-20 w-20 rounded-lg object-cover flex-shrink-0"
             />
           ) : (

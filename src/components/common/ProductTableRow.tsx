@@ -1,7 +1,8 @@
-import { TableCell, TableRow } from "../ui/table";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
 import { Product } from "@/hooks/useProduct";
+import Image from "next/image";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { TableCell, TableRow } from "../ui/table";
 
 type Props = {
   product: Product;
@@ -13,9 +14,11 @@ const ProductTableRow = ({ product, onEdit }: Props) => (
     <TableCell>
       <div className="flex gap-3">
         {product.photo ? (
-          <img
+          <Image
             src={product.photo}
             alt={product.name}
+            width={80}
+            height={80}
             className="h-14 w-14 rounded-lg object-cover flex-shrink-0"
           />
         ) : (

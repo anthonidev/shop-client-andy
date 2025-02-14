@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { DefaultSession, DefaultUser } from "next-auth";
 import { JWT } from "next-auth/jwt";
 

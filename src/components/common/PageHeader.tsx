@@ -5,12 +5,14 @@ import React from "react";
 interface PageHeaderProps {
   title?: string;
   description?: string;
+  buttonLabel?: string;
   onNewProduct: () => void;
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({
   title = "Productos",
   description = "Gestiona tu catálogo de productos",
+  buttonLabel = "Nuevo Producto",
   onNewProduct,
 }) => {
   return (
@@ -21,7 +23,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       </div>
       <Button className="gap-2" onClick={onNewProduct}>
         <Plus className="h-4 w-4" />
-        Nuevo Producto
+        {buttonLabel}
       </Button>
     </div>
   );

@@ -1,5 +1,11 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -8,18 +14,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Search, Plus, X, SlidersHorizontal } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import FilterSelect from "./FilterSelect";
-import ActiveFilters from "./ActiveFilters";
 import { Brand, Category } from "@/hooks/useProduct";
+import { Search, SlidersHorizontal } from "lucide-react";
+import React from "react";
+import ActiveFilters from "./ActiveFilters";
+import FilterSelect from "./FilterSelect";
 
 interface ProductFiltersProps {
   searchTerm: string;

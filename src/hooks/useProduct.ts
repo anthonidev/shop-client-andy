@@ -6,11 +6,13 @@ import { getBrands, getCategories, getProducts } from "@/server/product-action";
 export interface Category {
   id: number;
   name: string;
+  isActive?: boolean;
 }
 
 export interface Brand {
   id: number;
   name: string;
+  isActive?: boolean;
 }
 
 export interface Product {
@@ -67,7 +69,7 @@ const useModals = () => {
   };
 };
 
-export function useProduct(initialLimit: number = 10) {
+export function useProduct(initialLimit: number = 30) {
   // Estados
   const [products, setProducts] = useState<ProductsResponse | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);

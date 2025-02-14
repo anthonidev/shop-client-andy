@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
             };
           }
           return null;
-        } catch (error) {
+        } catch {
           return null;
         }
       },
@@ -98,7 +98,7 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/login",
+    signIn: "/",
     error: "/error",
   },
   session: {

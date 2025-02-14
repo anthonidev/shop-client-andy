@@ -19,7 +19,7 @@ export async function getProducts(
   pagination: PaginationDto
 ) {
   try {
-    const { limit = 10, offset = 0 } = pagination;
+    const { limit = 30, offset = 0 } = pagination;
     const params = new URLSearchParams();
 
     // Añadir parámetros de paginación
@@ -59,10 +59,10 @@ export async function getProducts(
   }
 }
 
-export async function getCategories() {
+export async function getCategories(isActive: boolean = true) {
   try {
     const response = await fetch(
-      `${process.env.API_BACKENDL_URL}/api/categories`,
+      `${process.env.API_BACKENDL_URL}/api/categories?isActive=${isActive}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -81,13 +81,16 @@ export async function getCategories() {
   }
 }
 
-export async function getBrands() {
+export async function getBrands(isActive: boolean = true) {
   try {
-    const response = await fetch(`${process.env.API_BACKENDL_URL}/api/brands`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${process.env.API_BACKENDL_URL}/api/brands?isActive=${isActive}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
@@ -138,6 +141,38 @@ export async function createEntity(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ name }),
+      }
+    );
+
+    if (!response.ok) {
+      const res = await response.json();
+      if (res.message) {
+        throw new Error(res.message);
+      }
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function updateEntity(
+  id: number,
+  data: { name: string; isActive: boolean },
+  type: "category" | "brand"
+) {
+  try {
+    const type_plural = type === "category" ? "categories" : "brands";
+    const response = await fetch(
+      `${process.env.API_BACKENDL_URL}/api/${type_plural}/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       }
     );
 

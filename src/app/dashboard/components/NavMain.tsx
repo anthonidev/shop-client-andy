@@ -43,7 +43,7 @@ export function NavMain({ items }: { items: NavItem[] }) {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="text-sm font-medium text-slate-500">
+      <SidebarGroupLabel className="text-sm font-medium text-muted-foreground">
         Plataforma
       </SidebarGroupLabel>
       <SidebarMenu>
@@ -63,14 +63,16 @@ export function NavMain({ items }: { items: NavItem[] }) {
                     tooltip={item.title}
                     className={`transition-colors duration-200 ${
                       isGroupActive
-                        ? "bg-slate-100 text-slate-900"
-                        : "hover:bg-slate-50"
+                        ? "bg-accent text-accent-foreground"
+                        : "hover:bg-accent/50"
                     }`}
                   >
                     {item.icon && (
                       <item.icon
                         className={`h-5 w-5 ${
-                          isGroupActive ? "text-blue-600" : "text-slate-500"
+                          isGroupActive
+                            ? "text-primary"
+                            : "text-muted-foreground"
                         }`}
                       />
                     )}
@@ -79,7 +81,11 @@ export function NavMain({ items }: { items: NavItem[] }) {
                     </span>
                     <ChevronRight
                       className={`ml-auto h-4 w-4 transition-transform duration-200 
-                        ${isGroupActive ? "text-slate-600" : "text-slate-400"}
+                        ${
+                          isGroupActive
+                            ? "text-foreground"
+                            : "text-muted-foreground"
+                        }
                         group-data-[state=open]/collapsible:rotate-90`}
                     />
                   </SidebarMenuButton>
@@ -95,14 +101,14 @@ export function NavMain({ items }: { items: NavItem[] }) {
                             asChild
                             className={`transition-colors duration-200 ${
                               isSubActive
-                                ? "bg-blue-50 text-blue-700 font-medium"
-                                : "hover:bg-slate-50"
+                                ? "bg-primary/10 text-primary font-medium dark:bg-primary/20"
+                                : "hover:bg-accent/50"
                             }`}
                           >
                             <Link href={subItem.url}>
                               <span>{subItem.title}</span>
                               {isSubActive && (
-                                <div className="absolute inset-y-0 left-0 w-1 bg-blue-600 rounded-r-full" />
+                                <div className="absolute inset-y-0 left-0 w-1 bg-primary rounded-r-full" />
                               )}
                             </Link>
                           </SidebarMenuSubButton>

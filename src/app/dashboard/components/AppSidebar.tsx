@@ -41,13 +41,24 @@ const data = {
         },
       ],
     },
+    {
+      title: "Admin",
+      url: "/dashboard/admin",
+      icon: Database,
+      items: [
+        {
+          title: "Usuarios",
+          url: "/dashboard/admin/usuarios",
+        },
+      ],
+    },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession();
   return (
-    <Sidebar title="Andy Shop" collapsible="icon" {...props}>
+    <Sidebar title="Andi Shop" collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -61,7 +72,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <span className="text-primary-foreground font-bold">A</span>
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">Andy Shop</span>
+                    <span className="truncate font-semibold">Andi Shop</span>
                     <span className="truncate text-xs">v1.0</span>
                   </div>
                 </SidebarMenuButton>

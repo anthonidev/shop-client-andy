@@ -6,14 +6,14 @@ export default withAuth(
   async function middleware(req) {
     const token = await getToken({ req, secret: process.env.JWT_SECRET });
     const isAuth = !!token;
-    const isAuthPage = req.nextUrl.pathname === "/login";
+    const isAuthPage = req.nextUrl.pathname === "/";
 
     if (isAuthPage && isAuth) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 
     if (!isAuthPage && !isAuth) {
-      return NextResponse.redirect(new URL("/login", req.url));
+      return NextResponse.redirect(new URL("/", req.url));
     }
 
     return NextResponse.next();
